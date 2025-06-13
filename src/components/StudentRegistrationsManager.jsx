@@ -10,7 +10,8 @@ const StudentRegistrationsManager = () => {
     getRegistrationsForOffering,
     deleteRegistration,
     getCourseById,
-    getCourseTypeById
+    getCourseTypeById,
+    studentRegistrations
   } = useData();
 
   const [selectedCourseType, setSelectedCourseType] = useState('');
@@ -128,6 +129,40 @@ const StudentRegistrationsManager = () => {
           )}
         </div>
       )}
+
+      {/* All Students List */}
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6 mt-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">All Registered Students</h3>
+        {studentRegistrations.length === 0 ? (
+          <div className="text-gray-500 italic">No students registered yet.</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm text-left">
+              <thead>
+                <tr className="border-b">
+                  <th className="py-2 px-4 font-semibold text-gray-700">Student Name</th>
+                  <th className="py-2 px-4 font-semibold text-gray-700">Course Type</th>
+                  <th className="py-2 px-4 font-semibold text-gray-700">Course Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                {studentRegistrations.map(r => {
+                  const offering = courseOfferings.find(o => o.id === r.offeringId);
+                  const course = getCourseById(offering?.courseId);
+                  const courseType = getCourseTypeById(offering?.courseTypeId);
+                  return (
+                    <tr key={r.id} className="border-b last:border-0">
+                      <td className="py-2 px-4 text-gray-900">{r.studentName}</td>
+                      <td className="py-2 px-4 text-gray-700">{courseType?.name || '-'}</td>
+                      <td className="py-2 px-4 text-gray-700">{course?.name || '-'}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
